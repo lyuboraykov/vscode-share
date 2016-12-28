@@ -15,9 +15,7 @@ export default class Sharer {
     }
 
     public static connectToRoomCommand(): void {
-        Room.getRoomNames().then(roomNames => {
-            return vscode.window.showQuickPick(roomNames);
-        }).then(roomName => {
+        vscode.window.showQuickPick(Room.getRoomNames()).then(roomName => {
             if (roomName) {
                 Sharer.connectToRoom(roomName);
             }
@@ -27,14 +25,19 @@ export default class Sharer {
     private static connectToRoom(roomName: string): void {
         const room = new Room(roomName, Sharer.setEditorContent);
         room.connect();
-        vscode.window.onDidChangeActiveTextEditor(editor => {
-            room.setContent(editor.document.getText());
+        vscode.workspace.onDidChangeTextDocument(changeEvent => {
+            room.setContent(changeEvent.document.getText());
         });
     }
 
     private static setEditorContent(content: string): void {
-        vscode.window.activeTextEditor.edit(edit => {
-            edit.replace(new vscode.Position(0, 0), content);
-        });
+        const currentContent = vscode.window.activeTextEditor.document.getText();
+        if (content != currentContent) {
+            vscode.window.activeTextEditor.edit(edit => {
+                const lastLine = vscode.window.activeTextEditor.document.lineCount;
+                const lastChar = currentContent.length;
+                edit.replace(new vscode.Range(0, 0, lastLine, lastChar), content);
+            });
+        }
     }
 }

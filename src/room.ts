@@ -102,8 +102,8 @@ export default class Room {
      * @memberOf Room
      */
     public static getRoomNames(): Thenable<string[]> {
-        return database().ref('rooms/').once(VALUE_CHANGED_EVENT, snapshot => {
+        return database().ref('rooms/').once(VALUE_CHANGED_EVENT).then(snapshot => {
             return Object.keys(snapshot.val());
-        });
+        })
     }
 }
