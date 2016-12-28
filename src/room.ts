@@ -1,3 +1,10 @@
+import {database} from 'firebase';
+import * as vscode from 'vscode';
+
+
+const VALUE_CHANGED_EVENT = 'value';
+
+
 export default class Room {
     private roomName: string;
     private isConnected: boolean;
@@ -11,6 +18,9 @@ export default class Room {
         if (this.isConnected) {
             return;
         }
+        firebase.database().ref(`rooms/${this.roomName}`).on(VALUE_CHANGED_EVENT, (snapshot) => {
+            // set document content here or use some cb?
+        });
     }
 
     public create(): void {
@@ -21,9 +31,12 @@ export default class Room {
         if (!this.isConnected) {
             return;
         }
+        firebase.database().ref(`rooms/${this.roomName}`).off(VALUE_CHANGED_EVENT);
     }
 
-    public static getRoomNames(): Array<string> {
-        return [];
+    public static getRoomNames(): Thenable<any> {
+        return firebase.database().ref('rooms/').once(VALUE_CHANGED_EVENT, snapshot => {
+            return Object.keys(snapshot.val());
+        });
     }
 }
