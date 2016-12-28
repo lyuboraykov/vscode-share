@@ -1,5 +1,4 @@
 import {database} from 'firebase';
-import * as vscode from 'vscode';
 
 const VALUE_CHANGED_EVENT = 'value';
 
@@ -44,7 +43,7 @@ export default class Room {
         if (this.isConnected) {
             return;
         }
-        firebase.database().ref(this.roomPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
+        database().ref(this.roomPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
             this.onContentChangeCb(snapshot.val().content);
         });
         this.isConnected = true;
@@ -56,11 +55,10 @@ export default class Room {
      * @memberOf Room
      */
     public create(): void {
-        firebase.database().ref(this.roomPath).set({
+        database().ref(this.roomPath).set({
             content: '',
             cursors: []
         });
-        this.connect();
     }
 
     /**
@@ -74,7 +72,7 @@ export default class Room {
         if (!this.isConnected) {
             return;
         }
-        firebase.database().ref(this.roomPath).off(VALUE_CHANGED_EVENT);
+        database().ref(this.roomPath).off(VALUE_CHANGED_EVENT);
     }
 
     /**
@@ -89,7 +87,7 @@ export default class Room {
         if (!this.isConnected) {
             return;
         }
-        firebase.database().ref(this.roomPath).set({
+        database().ref(this.roomPath).set({
             content: content,
             cursors: []
         });
@@ -104,7 +102,7 @@ export default class Room {
      * @memberOf Room
      */
     public static getRoomNames(): Thenable<string[]> {
-        return firebase.database().ref('rooms/').once(VALUE_CHANGED_EVENT, snapshot => {
+        return database().ref('rooms/').once(VALUE_CHANGED_EVENT, snapshot => {
             return Object.keys(snapshot.val());
         });
     }
