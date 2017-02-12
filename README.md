@@ -15,3 +15,8 @@ It uses [Firebase](https://firebase.google.com/) to pass content through.
 - Visual Stidio Code
 
 > This is a course project for the 'Advanced Javascript' elective at Sofia University.
+
+
+## TODO
+Each editor should have an UUID
+Persist lastEditBy UUID in the DB and only change document if it's different than current.
