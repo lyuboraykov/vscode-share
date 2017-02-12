@@ -12,13 +12,17 @@ export default class Sharer {
      * @memberOf Sharer
      */
     public static shareCommand(): void {
-        vscode.window.showInputBox().then(roomName => {
+        const message = 'Enter a connection name';
+        vscode.window.showInputBox({prompt: message}).then(roomName => {
             if (!roomName) {
                 return;
             }
             const room = new Room(roomName, Sharer.setEditorContent);
             room.create();
             Sharer.connectToRoom(roomName);
+            vscode.window.showInformationMessage('This editor is beaing shared.')
+            const fileName = vscode.window.activeTextEditor.document.fileName;
+            vscode.window.setStatusBarMessage(`Sharing ${fileName}`);
         });
     }
 
