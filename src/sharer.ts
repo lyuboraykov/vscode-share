@@ -20,9 +20,9 @@ export default class Sharer {
             const room = new Room(roomName, Sharer.setEditorContent);
             room.create();
             Sharer.connectToRoom(roomName);
-            vscode.window.showInformationMessage('This editor is beaing shared.')
+            vscode.window.showInformationMessage(`Sharing to ${roomName}.`)
             const fileName = vscode.window.activeTextEditor.document.fileName;
-            vscode.window.setStatusBarMessage(`Sharing ${fileName}`);
+            vscode.window.setStatusBarMessage(`Sharing ${fileName} to ${roomName}`);
         });
     }
 
@@ -38,6 +38,8 @@ export default class Sharer {
             if (roomName) {
                 Sharer.connectToRoom(roomName);
             }
+            vscode.window.showInformationMessage('Connected.')
+            vscode.window.setStatusBarMessage(`Connected to ${roomName}`);
         });
     }
 
