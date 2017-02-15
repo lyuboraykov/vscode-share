@@ -54,10 +54,10 @@ export default class Room {
      *
      * @memberOf Room
      */
-    public create(): void {
+    public create(editorGuid: string): void {
         database().ref(this.roomPath).set({
             content: '',
-            cursors: []
+            lastEditBy: editorGuid
         });
     }
 
@@ -72,6 +72,7 @@ export default class Room {
         if (!this.isConnected) {
             return;
         }
+        this.isConnected = false;
         database().ref(this.roomPath).off(VALUE_CHANGED_EVENT);
     }
 

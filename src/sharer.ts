@@ -21,7 +21,7 @@ export default class Sharer {
                 return;
             }
             const room = new Room(roomName, Sharer.setEditorContent);
-            room.create();
+            room.create(Sharer.editorGuid);
             Sharer.connectToRoom(roomName);
             vscode.window.showInformationMessage(`Sharing to ${roomName}.`)
             const fileName = vscode.window.activeTextEditor.document.fileName;
@@ -60,6 +60,10 @@ export default class Sharer {
         room.connect();
         vscode.workspace.onDidChangeTextDocument(changeEvent => {
             room.setContent(changeEvent.document.getText(), Sharer.editorGuid);
+        });
+        vscode.workspace.onDidCloseTextDocument(changeEvent => {
+            room.disconnect();
+            vscode.window.setStatusBarMessage('');
         });
     }
 
