@@ -18,5 +18,4 @@ It uses [Firebase](https://firebase.google.com/) to pass content through.
 
 
 ## TODO
-Each editor should have an UUID
-Persist lastEditBy UUID in the DB and only change document if it's different than current.
+Manage multiple open files better
