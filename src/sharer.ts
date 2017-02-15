@@ -1,8 +1,11 @@
 import * as vscode from 'vscode';
 
 import Room from './room';
+import {guid} from './utils';
 
 export default class Sharer {
+
+    private static editorGuid = guid();
 
     /**
      * Initiate the command to create a room
@@ -56,7 +59,7 @@ export default class Sharer {
         const room = new Room(roomName, Sharer.setEditorContent);
         room.connect();
         vscode.workspace.onDidChangeTextDocument(changeEvent => {
-            room.setContent(changeEvent.document.getText());
+            room.setContent(changeEvent.document.getText(), Sharer.editorGuid);
         });
     }
 
@@ -69,14 +72,16 @@ export default class Sharer {
      *
      * @memberOf Sharer
      */
-    private static setEditorContent(content: string): void {
-        const currentContent = vscode.window.activeTextEditor.document.getText();
-        if (content != currentContent) {
-            vscode.window.activeTextEditor.edit(edit => {
-                const lastLine = vscode.window.activeTextEditor.document.lineCount;
-                const lastChar = currentContent.length;
-                edit.replace(new vscode.Range(0, 0, lastLine, lastChar), content);
-            });
+    private static setEditorContent(content: string, lastEditBy: string): void {
+        if (lastEditBy !== Sharer.editorGuid) {
+            const currentContent = vscode.window.activeTextEditor.document.getText();
+            if (content != currentContent) {
+                vscode.window.activeTextEditor.edit(edit => {
+                    const lastLine = vscode.window.activeTextEditor.document.lineCount;
+                    const lastChar = currentContent.length;
+                    edit.replace(new vscode.Range(0, 0, lastLine, lastChar), content);
+                });
+            }
         }
     }
 }

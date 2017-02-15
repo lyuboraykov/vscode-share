@@ -12,7 +12,7 @@ export default class Room {
     private roomName: string;
     private roomPath: string;
     private isConnected: boolean;
-    private onContentChangeCb: (content: string) => void;
+    private onContentChangeCb: (content: string, editByUUID: string) => void;
 
     /**
      * Creates an instance of Room.
@@ -23,7 +23,7 @@ export default class Room {
      *
      * @memberOf Room
      */
-    constructor(roomName: string, onContentChange: (content: string) => void) {
+    constructor(roomName: string, onContentChange: (content: string, editByUUID: string) => void) {
         this.roomName = roomName;
         this.roomPath = `rooms/${this.roomName}`;
         this.isConnected = false;
@@ -44,7 +44,7 @@ export default class Room {
             return;
         }
         database().ref(this.roomPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
-            this.onContentChangeCb(snapshot.val().content);
+            this.onContentChangeCb(snapshot.val().content, snapshot.val().lastEditBy);
         });
         this.isConnected = true;
     }
@@ -83,13 +83,13 @@ export default class Room {
      *
      * @memberOf Room
      */
-    public setContent(content): void {
+    public setContent(content: string, editBy: string): void {
         if (!this.isConnected) {
             return;
         }
         database().ref(this.roomPath).set({
             content: content,
-            cursors: []
+            lastEditBy: editBy
         });
     }
 
