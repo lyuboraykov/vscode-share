@@ -12,5 +12,10 @@ Then on another computer:
 
 > Warning: this is still heavily under development
 
-## TODO
-Manage multiple open files better
+To disconnect from a session you have to close the file tab.
+
+## Upcoming features
+ - Better performance
+ - Password protection of sessions
+ - Showind different users with different cursors
+ - Multiple files per session support
