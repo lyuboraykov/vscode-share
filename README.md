@@ -7,6 +7,7 @@ Available commands:
 1. `Share: Open a new session`
 
 Then on another computer:
+
 2. `Share: Connect to a session`
 
 > Warning: this is still heavily under development
