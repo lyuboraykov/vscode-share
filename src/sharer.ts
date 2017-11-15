@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import Room from './room';
+import Session from './session';
 import {guid} from './utils';
 
 export default class Sharer {
@@ -8,61 +8,62 @@ export default class Sharer {
     private static editorGuid = guid();
 
     /**
-     * Initiate the command to create a room
+     * Initiate the command to open a sharing session
      *
      * @static
      *
      * @memberOf Sharer
      */
     public static shareCommand(): void {
-        const message = 'Enter a connection name';
-        vscode.window.showInputBox({prompt: message}).then(roomName => {
-            if (!roomName) {
+        const message = 'Enter the name of your session: ';
+        vscode.window.showInputBox({prompt: message}).then(sessionName => {
+            if (!sessionName) {
+                vscode.window.showErrorMessage('You need to enter a session name');
                 return;
             }
-            const room = new Room(roomName, Sharer.setEditorContent);
-            room.create(Sharer.editorGuid);
-            Sharer.connectToRoom(roomName);
-            vscode.window.showInformationMessage(`Sharing to ${roomName}.`)
+            const session = new Session(sessionName, Sharer.setEditorContent);
+            session.create(Sharer.editorGuid);
+            Sharer.connectToSession(sessionName);
+            vscode.window.showInformationMessage(`Sharing to ${sessionName}.`)
             const fileName = vscode.window.activeTextEditor.document.fileName;
-            vscode.window.setStatusBarMessage(`Sharing ${fileName} to ${roomName}`);
+            vscode.window.setStatusBarMessage(`Sharing ${fileName} to ${sessionName}`);
         });
     }
 
     /**
-     * Execute the command to connect to a room
+     * Execute the command to connect to a session
      *
      * @static
      *
      * @memberOf Sharer
      */
-    public static connectToRoomCommand(): void {
-        vscode.window.showQuickPick(Room.getRoomNames()).then(roomName => {
-            if (roomName) {
-                Sharer.connectToRoom(roomName);
+    public static connectToSessionCommand(): void {
+        vscode.window.showQuickPick(Session.getSessionNames()).then(sessionName => {
+            if (sessionName) {
+                Sharer.connectToSession(sessionName);
             }
             vscode.window.showInformationMessage('Connected.')
-            vscode.window.setStatusBarMessage(`Connected to ${roomName}`);
+            vscode.window.setStatusBarMessage(`Connected to ${sessionName}`);
         });
     }
 
     /**
-     * Hook the events for connecting to a room
+     * Hook the events for connecting from a session
      *
      * @private
      * @static
-     * @param {string} roomName
+     * @param {string} sessionName
      *
      * @memberOf Sharer
      */
-    private static connectToRoom(roomName: string): void {
-        const room = new Room(roomName, Sharer.setEditorContent);
-        room.connect();
+    private static connectToSession(sessionName: string): void {
+        const session = new Session(sessionName, Sharer.setEditorContent);
+        session.connect();
         vscode.workspace.onDidChangeTextDocument(changeEvent => {
-            room.setContent(changeEvent.document.getText(), Sharer.editorGuid);
+            session.setContent(changeEvent.document.getText(), Sharer.editorGuid);
         });
         vscode.workspace.onDidCloseTextDocument(changeEvent => {
-            room.disconnect();
+            session.disconnect();
             vscode.window.setStatusBarMessage('');
         });
     }

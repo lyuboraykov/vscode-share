@@ -11,19 +11,19 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.shareEditor",
-        "onCommand:extension.connectToEditor"
+        "onCommand:extension.openSession",
+        "onCommand:extension.connectToSession"
     ],
     "main": "./out/src/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.shareEditor",
-                "title": "Share Editor"
+                "command": "extension.openSession",
+                "title": "Share: Open a new session"
             },
             {
-                "command": "extension.connectToEditor",
-                "title": "Connect to Editor"
+                "command": "extension.connectToSession",
+                "title": "Share: Connect to a session"
             }
         ]
     },

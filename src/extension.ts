@@ -18,12 +18,12 @@ export function activate(context: vscode.ExtensionContext) {
     };
     firebase.initializeApp(config);
 
-    let disposableSharer = vscode.commands.registerCommand('extension.shareEditor', () => {
+    let disposableSharer = vscode.commands.registerCommand('extension.openSession', () => {
         Sharer.shareCommand();
     });
 
-    let disposableConnector = vscode.commands.registerCommand('extension.connectToEditor', () => {
-        Sharer.connectToRoomCommand();
+    let disposableConnector = vscode.commands.registerCommand('extension.connectToSession', () => {
+        Sharer.connectToSessionCommand();
     });
 
     context.subscriptions.push(disposableSharer);

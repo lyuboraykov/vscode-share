@@ -2,20 +2,14 @@
 
 This extension allows you to edit files by collaborating with another
 person using it.
-It uses [Firebase](https://firebase.google.com/) to pass content through.
 
-## How to
-0. Install the extension from the marketplace
-1. Share editor
-2. Connect to editor from another instance of VSCode
+Available commands:
+1. `Share: Open a new session`
 
-## Technologies used
-- Typescript
-- Firebase
-- Visual Stidio Code
+Then on another computer:
+2. `Share: Connect to a session`
 
-> This is a course project for the 'Advanced Javascript' elective at Sofia University.
-
+> Warning: this is still heavily under development
 
 ## TODO
 Manage multiple open files better

@@ -2,108 +2,111 @@ import {database} from 'firebase';
 
 const VALUE_CHANGED_EVENT = 'value';
 
+// TODO: rename it gradually
+const FIREBASE_SESSIONS_PATH = 'rooms/';
+
 /**
- * Represents a room which is shared
+ * Represents a session which is shared
  *
  * @export
- * @class Room
+ * @class Session
  */
-export default class Room {
-    private roomName: string;
-    private roomPath: string;
+export default class Session {
+    private sessionName: string;
+    private sessionPath: string;
     private isConnected: boolean;
     private onContentChangeCb: (content: string, editByUUID: string) => void;
 
     /**
-     * Creates an instance of Room.
+     * Creates an instance of Session.
      *
-     * @param {string} roomName - the name of the room to create
+     * @param {string} sessionName - the name of the Session to create
      * @param {(content: string) => void} onContentChange - this will be called every
      * time content changes
      *
-     * @memberOf Room
+     * @memberOf Session
      */
-    constructor(roomName: string, onContentChange: (content: string, editByUUID: string) => void) {
-        this.roomName = roomName;
-        this.roomPath = `rooms/${this.roomName}`;
+    constructor(sessionName: string, onContentChange: (content: string, editByUUID: string) => void) {
+        this.sessionName = sessionName;
+        this.sessionPath = `${FIREBASE_SESSIONS_PATH}${this.sessionName}`;
         this.isConnected = false;
         this.onContentChangeCb = onContentChange;
     }
 
     /**
-     * Start listening for changes in a room
+     * Start listening for changes in a Session
      *
      * Every time there's a change call onContentChange
      *
      * @returns {void}
      *
-     * @memberOf Room
+     * @memberOf Session
      */
     public connect(): void {
         if (this.isConnected) {
             return;
         }
-        database().ref(this.roomPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
+        database().ref(this.sessionPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
             this.onContentChangeCb(snapshot.val().content, snapshot.val().lastEditBy);
         });
         this.isConnected = true;
     }
 
     /**
-     * Create a new shared room and connect to it
+     * Create a new shared Session and connect to it
      *
-     * @memberOf Room
+     * @memberOf Session
      */
     public create(editorGuid: string): void {
-        database().ref(this.roomPath).set({
+        database().ref(this.sessionPath).set({
             content: '',
             lastEditBy: editorGuid
         });
     }
 
     /**
-     * Stop listening for changes in a room
+     * Stop listening for changes in a Session
      *
      * @returns {void}
      *
-     * @memberOf Room
+     * @memberOf Session
      */
     public disconnect(): void {
         if (!this.isConnected) {
             return;
         }
         this.isConnected = false;
-        database().ref(this.roomPath).off(VALUE_CHANGED_EVENT);
+        database().ref(this.sessionPath).off(VALUE_CHANGED_EVENT);
     }
 
     /**
-     * Set the content of a room, useful to be applied as a callback somewhere
+     * Set the content of a Session, useful to be applied as a callback somewhere
      *
      * @param {any} content
      * @returns {void}
      *
-     * @memberOf Room
+     * @memberOf Session
      */
     public setContent(content: string, editBy: string): void {
         if (!this.isConnected) {
             return;
         }
-        database().ref(this.roomPath).set({
+        database().ref(this.sessionPath).set({
             content: content,
             lastEditBy: editBy
         });
     }
 
     /**
-     * Get a list of all rooms available.
+     * Get a list of all Sessions available.
      *
      * @static
      * @returns {Thenable<string[]>}
      *
-     * @memberOf Room
+     * @memberOf Session
      */
-    public static getRoomNames(): Thenable<string[]> {
-        return database().ref('rooms/').once(VALUE_CHANGED_EVENT).then(snapshot => {
+    public static getSessionNames(): Thenable<string[]> {
+        return database().ref(FIREBASE_SESSIONS_PATH).once(VALUE_CHANGED_EVENT).then(snapshot => {
             return Object.keys(snapshot.val());
         })
     }
