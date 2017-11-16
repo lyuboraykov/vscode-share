@@ -7,6 +7,14 @@
     "engines": {
         "vscode": "^1.5.0"
     },
+    "bugs": {
+		"url": "https://github.com/lyuboraykov/vscode-share/issues",
+		"email": "lyubo.raykov@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lyuboraykov/vscode-share.git"
+	},
     "categories": [
         "Other"
     ],
