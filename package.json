@@ -2,7 +2,7 @@
     "name": "share",
     "displayName": "Share",
     "description": "Collaborative editing in vscode",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "publisher": "lyuboraykov",
     "icon": "images/vscode-share-icon.png",
     "engines": {
