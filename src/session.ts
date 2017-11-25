@@ -47,7 +47,8 @@ export default class Session {
             return;
         }
         database().ref(this.sessionPath).on(VALUE_CHANGED_EVENT, (snapshot) => {
-            this.onContentChangeCb(snapshot.val().content, snapshot.val().lastEditBy);
+            let value = snapshot.val()
+            this.onContentChangeCb(value.content, value.lastEditBy);
         });
         this.isConnected = true;
     }

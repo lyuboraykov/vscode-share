@@ -41,9 +41,9 @@ export default class Sharer {
         vscode.window.showQuickPick(Session.getSessionNames()).then(sessionName => {
             if (sessionName) {
                 Sharer.connectToSession(sessionName);
+                vscode.window.showInformationMessage('Connected.')
+                vscode.window.setStatusBarMessage(`Connected to ${sessionName}`);
             }
-            vscode.window.showInformationMessage('Connected.')
-            vscode.window.setStatusBarMessage(`Connected to ${sessionName}`);
         });
     }
 
